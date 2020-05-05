@@ -1,0 +1,16 @@
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BusinessService.Api.Domain.DBModel;
+
+namespace BusinessService.Api.Domain.Repository
+{
+    public interface IStudentsRepository
+    {
+        Task<IEnumerable<Student>> GetAllStudentsAsync();
+        Task<Student> GetStudentAsync(int studentId);
+        Task<IEnumerable<Student>> FindStudentsAsync(string sku);
+        Task<Student> AddStudentAsync(Student student);
+        Task<Student> UpdateStudentAsync(int studentId, Student student);
+        Task<Student> DeleteStudentAsync(int studentId);
+    }
+}
