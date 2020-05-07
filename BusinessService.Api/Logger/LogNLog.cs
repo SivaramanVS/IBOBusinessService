@@ -7,7 +7,7 @@ namespace BusinessService.Api.Logger
     /// </summary>
     public class LogNLog : ILog
     {
-        private static ILogger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 
@@ -22,7 +22,7 @@ namespace BusinessService.Api.Logger
         /// <param name="message"></param>
         public void Information(string message)
         {
-            logger.Info(message);
+            Logger.Info(message);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace BusinessService.Api.Logger
         /// <param name="message"></param>
         public void Warning(string message)
         {
-            logger.Warn(message);
+            Logger.Warn(message);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace BusinessService.Api.Logger
         /// <param name="message"></param>
         public void Debug(string message)
         {
-            logger.Debug(message);
+            Logger.Debug(message);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace BusinessService.Api.Logger
         /// <param name="message"></param>
         public void Error(string message)
         {
-            logger.Error(message);
+            Logger.Error(message);
         }
     }
 }
