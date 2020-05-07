@@ -1,10 +1,9 @@
-﻿using BusinessService.Data.DBModel;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using BusinessService.Data.DBModel;
 using BusinessService.Data.Repository;
 using BusinessService.Domain.DomainModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BusinessService.Domain.Services
 {
@@ -21,24 +20,19 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                IEnumerable<Student> students = await _studentsRepository.FindStudentsAsync(name);
+                var students = await _studentsRepository.FindStudentsAsync(name);
 
                 if (students != null)
-                {
-                    return new OkObjectResult(students.Select(p => new StudentViewModel()
+                    return new OkObjectResult(students.Select(p => new StudentViewModel
                         {
                             //Id = p.StudentId,
-                            
+
                             Name = p.Name.Trim(),
                             Gender = p.Gender.Trim(),
-                        SchoolId = p.School
-                    }
+                            SchoolId = p.School
+                        }
                     ));
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -50,23 +44,18 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                IEnumerable<Student> students = await _studentsRepository.GetAllStudentsAsync();
+                var students = await _studentsRepository.GetAllStudentsAsync();
 
                 if (students != null)
-                {
-                    return new OkObjectResult(students.Select(p => new StudentViewModel()
+                    return new OkObjectResult(students.Select(p => new StudentViewModel
                         {
-                           // Id = p.StudentId,
+                            // Id = p.StudentId,
                             Gender = p.Gender.Trim(),
                             Name = p.Name.Trim(),
-                        SchoolId = p.School
-                    }
+                            SchoolId = p.School
+                        }
                     ));
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -78,22 +67,17 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                Student student = await _studentsRepository.GetStudentAsync(studentId);
+                var student = await _studentsRepository.GetStudentAsync(studentId);
 
                 if (student != null)
-                {
-                    return new OkObjectResult(new StudentViewModel()
+                    return new OkObjectResult(new StudentViewModel
                     {
-                       // Id = student.StudentId,
+                        // Id = student.StudentId,
                         Gender = student.Gender.Trim(),
                         Name = student.Name.Trim(),
                         SchoolId = student.School
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -105,22 +89,17 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                Student student = await _studentsRepository.DeleteStudentAsync(studentId);
+                var student = await _studentsRepository.DeleteStudentAsync(studentId);
 
                 if (student != null)
-                {
-                    return new OkObjectResult(new StudentViewModel()
+                    return new OkObjectResult(new StudentViewModel
                     {
-                       // Id = student.StudentId,
+                        // Id = student.StudentId,
                         Gender = student.Gender.Trim(),
                         Name = student.Name.Trim(),
                         SchoolId = student.School
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -130,26 +109,18 @@ namespace BusinessService.Domain.Services
 
         public async Task<IActionResult> AddStudentAsync(Student student)
         {
-
             try
             {
-               
-                Student studentList = await _studentsRepository.AddStudentAsync(student);
+                var studentList = await _studentsRepository.AddStudentAsync(student);
                 if (student != null)
-                {
-                    return new OkObjectResult(new StudentViewModel()
+                    return new OkObjectResult(new StudentViewModel
                     {
-                       // Id = studentList.StudentId,
+                        // Id = studentList.StudentId,
                         Gender = studentList.Gender.Trim(),
                         Name = studentList.Name.Trim(),
                         SchoolId = studentList.School
-
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -161,21 +132,16 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                Student studentList = await _studentsRepository.UpdateStudentAsync(studentId, student);
+                var studentList = await _studentsRepository.UpdateStudentAsync(studentId, student);
                 if (studentList != null)
-                {
-                    return new OkObjectResult(new StudentViewModel()
+                    return new OkObjectResult(new StudentViewModel
                     {
-                       // Id = studentId,
+                        // Id = studentId,
                         Gender = studentList.Gender.Trim(),
                         Name = studentList.Name.Trim(),
                         SchoolId = studentList.School
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -183,5 +149,4 @@ namespace BusinessService.Domain.Services
             }
         }
     }
-
 }

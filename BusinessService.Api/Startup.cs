@@ -1,115 +1,98 @@
+using BusinessService.Api.Extensions;
+using BusinessService.Api.Logger;
+using BusinessService.Api.Validation;
 using BusinessService.Data;
+using BusinessService.Data.DBModel;
+using BusinessService.Data.Repository;
+using BusinessService.Domain.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation.AspNetCore;
-using FluentValidation;
 using Microsoft.OpenApi.Models;
-using BusinessService.Data.Repository;
-using BusinessService.Domain.Services;
-using BusinessService.Data.DBModel;
-using BusinessService.Api.Validation;
+using NLog;
+using System.IO;
 
 namespace BusinessService.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
+            //LogManager.LoadConfiguration(System.String.Concat(Directory.GetCurrentDirectory(), "/NLog.config"));
+
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ILog, LogNLog>();
             services.AddDbContext<DefaultContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultDatabase")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IStudentsRepository, StudentsRepository>();
             services.AddScoped<ISchoolsRepository, SchoolsRepository>();
             services.AddTransient<IStudentsService, StudentsService>();
             services.AddTransient<ISchoolsService, SchoolsService>();
-            //services.AddDbContext<BoardDbContext>(opt => opt.UseSqlServer("Server=DNETAZ19;Database=Board;User Id=VRajan;Password=Cts784280;", opt => opt.EnableRetryOnFailure(10)));
-            //services.AddScoped(typeof(IValidator<long, BoardId>),typeof(BuildBoardIdValidator));
-            //services.AddScoped(typeof(IValidator<string, BoardName>), typeof(BuildBoardNameValidator));
-            //services.AddScoped(typeof(IValidator<CreateBoardCommand, Board>), typeof(BuildBoardFromCreateCommand));
-            //services.AddScoped(typeof(IValidator<UpdateBoardCommand, Board>), typeof(BuildBoardFromUpdateCommand));
-            //services.AddScoped(typeof(IRepository<long, BoardDbModel>),typeof(BoardRepository));
-            //services.AddScoped(typeof(ICommandHandler<CreateBoardCommand, bool>), typeof(CreateBoardCommandHandler));
-            //services.AddScoped(typeof(ICommandHandler<UpdateBoardCommand, bool>), typeof(UpdateBoardCommandHandler));
-            //services.AddScoped(typeof(IQueryHandler<GetAllBoardQuery, IEnumerable<BoardDTO>>), typeof(GetAllBoardQueryHandler));
-            //services.AddScoped(typeof(IMapper<Board, BoardDbModel>),typeof(BoardDomainToDbModel));
-            //services.AddScoped(typeof(IMapper<BoardDTO, BoardDbModel>), typeof(BoardDTOtoDbModel));
-            services.AddMvc().AddFluentValidation(fv => {
+            services.AddMvc().AddFluentValidation(fv =>
+            {
                 fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
             });
             services.AddTransient<IValidator<School>, SchoolValidator>();
             services.AddTransient<IValidator<Student>, StudentValidator>();
 
-            //services.AddDistributedRedisCache(options =>
-            //{
-            //    options.InstanceName = Configuration.GetValue<string>("Redis:Name");
-            //    options.Configuration = Configuration.GetValue<string>("Redis:Host");
-            //});
+           
             services.AddSession();
-            services.AddDistributedRedisCache(o =>
-            {
-                 // o.Configuration = Configuration.GetConnectionString("Host");
-               o.InstanceName = Configuration.GetValue<string>("Redis:Name");
-                o.Configuration = Configuration.GetValue<string>("Redis:Host");
+           
 
-            });
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info
-            //    {
-            //        version = "v1",
-            //        title = "MyAPI",
-            //        description = "Testing"  
-            //    });
-            //    //Locate the XML file being generated by ASP.NET...
-            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
-            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-            //    //... and tell Swagger to use those XML comments.
-            //    c.IncludeXmlComments(xmlPath);
-            //});
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyAPI", Version = "v1"}); });
             services.AddControllers();
+            services.AddApplicationInsightsTelemetry();
+
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="logger"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILog logger)
+        {
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
             //app.UseSession();
             app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json","MyAPI");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI"); });
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
         }
     }
 }

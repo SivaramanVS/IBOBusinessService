@@ -1,10 +1,9 @@
-﻿using BusinessService.Data.DBModel;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using BusinessService.Data.DBModel;
 using BusinessService.Data.Repository;
 using BusinessService.Domain.DomainModel;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BusinessService.Domain.Services
 {
@@ -21,20 +20,13 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                School schoolList = await _schoolsRepository.AddSchoolsAsync(schools);
+                var schoolList = await _schoolsRepository.AddSchoolsAsync(schools);
                 if (schools != null)
-                {
-                    return new OkObjectResult(new SchoolViewModel()
+                    return new OkObjectResult(new SchoolViewModel
                     {
-                         
                         Name = schoolList.Name.Trim()
-
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -46,21 +38,16 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                School school = await _schoolsRepository.DeleteSchoolsAsync(schoolsId);
+                var school = await _schoolsRepository.DeleteSchoolsAsync(schoolsId);
 
                 if (school != null)
-                {
-                    return new OkObjectResult(new SchoolViewModel()
+                    return new OkObjectResult(new SchoolViewModel
                     {
                         //Id = schoolsId,
-                        
+
                         Name = school.Name.Trim()
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -72,23 +59,17 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                IEnumerable<School> school = await _schoolsRepository.FindSchoolsAsync(schoolName);
+                var school = await _schoolsRepository.FindSchoolsAsync(schoolName);
 
                 if (school != null)
-                {
-                    return new OkObjectResult(school.Select(p => new SchoolViewModel()
+                    return new OkObjectResult(school.Select(p => new SchoolViewModel
                         {
                             //Id = p.Id,
 
-                            Name = p.Name.Trim(),
-                            
+                            Name = p.Name.Trim()
                         }
                     ));
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -100,22 +81,17 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                IEnumerable<School> schools = await _schoolsRepository.GetAllSchoolsAsync();
+                var schools = await _schoolsRepository.GetAllSchoolsAsync();
 
                 if (schools != null)
-                {
-                    return new OkObjectResult(schools.Select(p => new SchoolViewModel()
+                    return new OkObjectResult(schools.Select(p => new SchoolViewModel
                         {
-                           // Id = p.Id,
-                            
+                            // Id = p.Id,
+
                             Name = p.Name.Trim()
                         }
                     ));
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {
@@ -127,20 +103,15 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                School school = await _schoolsRepository.GetSchoolsAsync(studentId);
+                var school = await _schoolsRepository.GetSchoolsAsync(studentId);
 
                 if (school != null)
-                {
-                    return new OkObjectResult(new SchoolViewModel()
-                            {
-                                //School = p.Value,
-                                Name = school.Name.Trim()
-                            });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                    return new OkObjectResult(new SchoolViewModel
+                    {
+                        //School = p.Value,
+                        Name = school.Name.Trim()
+                    });
+                return new NotFoundResult();
             }
             catch
             {
@@ -152,20 +123,15 @@ namespace BusinessService.Domain.Services
         {
             try
             {
-                School schoolsList = await _schoolsRepository.UpdateSchoolsAsync(schoolsId, schools);
+                var schoolsList = await _schoolsRepository.UpdateSchoolsAsync(schoolsId, schools);
                 if (schools != null)
-                {
-                    return new OkObjectResult(new SchoolViewModel()
+                    return new OkObjectResult(new SchoolViewModel
                     {
                         //Id = schoolsId,
-                       
+
                         Name = schoolsList.Name.Trim()
                     });
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
+                return new NotFoundResult();
             }
             catch
             {

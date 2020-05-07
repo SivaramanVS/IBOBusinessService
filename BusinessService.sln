@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessService.Api", "Busi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessService.Infrastructure", "BusinessService.Infrastructure", "{DE364DA5-9BD6-4045-B999-7C156D7E4BF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessService.Data", "BusinessService.Data\BusinessService.Data.csproj", "{E6E2A107-27EA-40D7-9835-A6DC22979667}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessService.Data", "BusinessService.Data\BusinessService.Data.csproj", "{E6E2A107-27EA-40D7-9835-A6DC22979667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessService.Domain", "BusinessService.Domain\BusinessService.Domain.csproj", "{04BB348B-B509-4C07-8149-61FEAA48AA78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessService.Domain", "BusinessService.Domain\BusinessService.Domain.csproj", "{04BB348B-B509-4C07-8149-61FEAA48AA78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessService.Test", "BusinessService.Test\BusinessService.Test.csproj", "{ACCDF3C9-6105-4372-8D7B-2AC86403ACB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{04BB348B-B509-4C07-8149-61FEAA48AA78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04BB348B-B509-4C07-8149-61FEAA48AA78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04BB348B-B509-4C07-8149-61FEAA48AA78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACCDF3C9-6105-4372-8D7B-2AC86403ACB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACCDF3C9-6105-4372-8D7B-2AC86403ACB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACCDF3C9-6105-4372-8D7B-2AC86403ACB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACCDF3C9-6105-4372-8D7B-2AC86403ACB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

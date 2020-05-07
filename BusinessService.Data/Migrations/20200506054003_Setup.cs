@@ -2,7 +2,7 @@
 
 namespace BusinessService.Data.Migrations
 {
-    public partial class SchoolDatabase : Migration
+    public partial class Setup : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

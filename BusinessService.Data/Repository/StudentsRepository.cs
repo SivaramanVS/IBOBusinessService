@@ -10,16 +10,13 @@ namespace BusinessService.Data.Repository
     {
         private readonly DefaultContext _context;
 
-       
 
         // private EntityEntry<Student> _entityEntry;
-      
+
 
         public StudentsRepository(DefaultContext context)
         {
             _context = context;
-            
-            
         }
 
         public async Task<IEnumerable<Student>> GetAllStudentsAsync()
@@ -53,7 +50,6 @@ namespace BusinessService.Data.Repository
 
         public async Task<Student> AddStudentAsync(Student student)
         {
-            
             if (student != null)
             {
                 await _context.Students.AddAsync(student);
@@ -78,7 +74,5 @@ namespace BusinessService.Data.Repository
 
             return student;
         }
-
-        
     }
 }
