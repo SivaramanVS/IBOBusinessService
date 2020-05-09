@@ -1,23 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessService.Data.DBModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace BusinessService.Data.Repository
 {
     public class SchoolsRepository : ISchoolsRepository
     {
         private readonly DefaultContext _context;
+        private readonly IDistributedCache _distributedCache;
+        private readonly Settings _settings;
 
-        public SchoolsRepository(DefaultContext context)
+        public SchoolsRepository(DefaultContext context, IConfiguration configuration, IDistributedCache distributedCache)
         {
             _context = context;
+            _distributedCache = distributedCache;
+            _settings = new Settings(configuration);
         }
 
         public async Task<School> GetSchoolsAsync(int schoolsId)
         {
-            return await _context.Schools.Where(p => p.Id == schoolsId).FirstOrDefaultAsync();
+            var jsonData = await _distributedCache.GetStringAsync("GetSchoolById");
+            if (jsonData != null)
+            {
+                var tModel = JsonConvert.DeserializeObject<School>(jsonData);
+                var schools = tModel;
+                return schools;
+            }
+            else
+            {
+                var schools = await _context.Schools.Where(p => p.Id == schoolsId).FirstOrDefaultAsync();
+                jsonData = JsonConvert.SerializeObject(schools);
+                DistributedCacheEntryOptions cacheOptions = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(_settings.PricesExpirationPeriod));
+                await _distributedCache.SetStringAsync("GetSchoolById", jsonData, cacheOptions);
+                return schools;
+            }
+               
         }
 
         public async Task<School> AddSchoolsAsync(School schools)
@@ -53,7 +78,23 @@ namespace BusinessService.Data.Repository
 
         public async Task<IEnumerable<School>> GetAllSchoolsAsync()
         {
-            return await _context.Schools.ToListAsync();
+            var jsonData = await _distributedCache.GetStringAsync("GetAllSchools");
+            if (jsonData != null)
+            {
+                var tModel = JsonConvert.DeserializeObject<IEnumerable<School>>(jsonData);
+                var schools = tModel;
+                return schools;
+            }
+            else
+            {
+                var schools = await _context.Schools.ToListAsync();
+                jsonData = JsonConvert.SerializeObject(schools);
+                DistributedCacheEntryOptions cacheOptions = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(_settings.PricesExpirationPeriod));
+                await _distributedCache.SetStringAsync("GetAllSchools", jsonData, cacheOptions);
+                return schools;
+            }
+           
         }
 
 
@@ -68,6 +109,21 @@ namespace BusinessService.Data.Repository
             }
 
             return schools;
+        }
+
+        class Settings
+        {
+            public int PricesExpirationPeriod = 1;       //15 minutes by default
+
+            public Settings(IConfiguration configuration)
+            {
+                int pricesExpirationPeriod;
+                if (Int32.TryParse(configuration["Caching:PricesExpirationPeriod"], NumberStyles.Any,
+                    NumberFormatInfo.InvariantInfo, out pricesExpirationPeriod))
+                {
+                    PricesExpirationPeriod = pricesExpirationPeriod;
+                }
+            }
         }
     }
 }

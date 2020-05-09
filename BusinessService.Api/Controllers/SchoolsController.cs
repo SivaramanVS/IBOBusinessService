@@ -2,18 +2,25 @@
 using System.Threading.Tasks;
 using BusinessService.Api.Logger;
 using BusinessService.Data.DBModel;
+using BusinessService.Domain.DomainModel;
 using BusinessService.Domain.Services;
 using Microsoft.AspNetCore.Mvc; //using BusinessService..Domain.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace BusinessService.Api.Controllers
 {
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/[controller]")]
+    [ApiVersion("1")]
+    [ApiExplorerSettings(GroupName = "v1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class SchoolsController : ControllerBase
     {
+        private readonly IDistributedCache _distributedCache;
         private readonly ISchoolsService _schoolsService;
         private readonly ILog _logger;
 
@@ -22,11 +29,15 @@ namespace BusinessService.Api.Controllers
         /// 
         /// </summary>
         /// <param name="schoolsService"></param>
+        /// <param name="distributedCache"></param>
         /// <param name="logger"></param>
-        public SchoolsController(ISchoolsService schoolsService, ILog logger = default)
+        public SchoolsController(ISchoolsService schoolsService,
+            ILog logger = default)
         {
             _schoolsService = schoolsService;
             this._logger = logger ?? new LogNLog();
+
+            
         }
 
         // GET /api/Schools
@@ -37,14 +48,12 @@ namespace BusinessService.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStudentsAsync()
         {
-            
-            
-                _logger.Information("Fetching Started");
+
+                _logger.Information("Fetching Started: ");
                 var school = await _schoolsService.GetAllSchoolsAsync();
-                
+
                 return school;
-            
-           
+
         }
 
 
@@ -67,6 +76,7 @@ namespace BusinessService.Api.Controllers
         /// </summary>
         /// <param name="schoolName"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]
         [Route("FindByName")]
         public async Task<IActionResult> FindStudentsAsync(string schoolName)

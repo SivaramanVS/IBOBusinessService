@@ -7,15 +7,19 @@ using BusinessService.Data.Repository;
 using BusinessService.Domain.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NLog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.IO;
+using System.Linq;
 
 namespace BusinessService.Api
 {
@@ -61,14 +65,83 @@ namespace BusinessService.Api
             services.AddTransient<IValidator<School>, SchoolValidator>();
             services.AddTransient<IValidator<Student>, StudentValidator>();
 
-           
+
             services.AddSession();
-           
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyAPI", Version = "v1"}); });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "IBO School API",
+                    Version = "v1",
+                    Description = "v1 API Description"
+                    
+                });
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "IBO School API",
+                    Version = "v2",
+                    Description = "v2 API Description"
+                });
+
+
+              
+             
+
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
+
+            services.AddVersionedApiExplorer(o =>
+            {
+                o.GroupNameFormat = "'v'VVV";
+                o.SubstituteApiVersionInUrl = true;
+            });
             services.AddControllers();
+            services.AddApiVersioning(
+                x =>
+            {
+                x.DefaultApiVersion = new ApiVersion(1, 0);
+                x.AssumeDefaultVersionWhenUnspecified = true;
+                x.ReportApiVersions = true;
+            }
+        );
             services.AddApplicationInsightsTelemetry();
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(options =>
+                {
+                    options.Authority = "https://iboauthapi.auth0.com/";
+                    options.Audience = "https://localhost:5001/";
+                });
 
+                services.AddDistributedRedisCache(option =>
+                {
+                    option.Configuration = "127.0.0.1";
+                    option.InstanceName = "Redis";
+                });
         }
 
 
@@ -86,8 +159,13 @@ namespace BusinessService.Api
             //app.UseSession();
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI"); });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"/swagger/v1/swagger.json", $"v1");
+                c.SwaggerEndpoint($"/swagger/v2/swagger.json", $"v2");
+            });
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -95,4 +173,6 @@ namespace BusinessService.Api
 
         }
     }
+
+     
 }

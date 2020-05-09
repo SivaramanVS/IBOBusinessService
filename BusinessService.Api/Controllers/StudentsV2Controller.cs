@@ -9,11 +9,11 @@ namespace BusinessService.Api.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [ApiVersion("1")]
-    [ApiExplorerSettings(GroupName = "v1")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("2")]
+    [ApiExplorerSettings(GroupName = "v2")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : Controller
+    public class StudentsV2Controller : Controller
     {
         private readonly IStudentsService _studentsService;
         private readonly ILog _logger;
@@ -23,7 +23,7 @@ namespace BusinessService.Api.Controllers
         /// </summary>
         /// <param name="studentsService"></param>
         /// <param name="logger"></param>
-        public StudentsController(IStudentsService studentsService, ILog logger)
+        public StudentsV2Controller(IStudentsService studentsService, ILog logger)
         {
             
             _studentsService = studentsService;
