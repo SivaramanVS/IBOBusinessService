@@ -139,8 +139,8 @@ namespace BusinessService.Api
 
                 services.AddDistributedRedisCache(option =>
                 {
-                    option.Configuration = "127.0.0.1";
-                    option.InstanceName = "Redis";
+                    option.Configuration = Configuration["ConnectionStrings:Redis"]; ;
+                    option.InstanceName = "iboapp";
                 });
         }
 
