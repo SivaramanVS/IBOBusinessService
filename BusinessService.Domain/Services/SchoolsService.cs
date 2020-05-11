@@ -1,26 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
+﻿using BusinessService.Data.DBModel;
 using BusinessService.Data.Repository;
 using BusinessService.Domain.DomainModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessService.Domain.Services
 {
     public class SchoolsService : ISchoolsService
     {
         private readonly ISchoolsRepository _schoolsRepository;
-        
+
         public SchoolsService(ISchoolsRepository schoolsRepository)
         {
             _schoolsRepository = schoolsRepository;
-            
+
         }
 
         public async Task<IActionResult> AddSchoolsAsync(School schools)
@@ -70,11 +64,11 @@ namespace BusinessService.Domain.Services
 
                 if (school != null)
                     return new OkObjectResult(school.Select(p => new SchoolViewModel
-                        {
-                            //Id = p.Id,
+                    {
+                        //Id = p.Id,
 
-                            Name = p.Name.Trim()
-                        }
+                        Name = p.Name.Trim()
+                    }
                     ));
                 return new NotFoundResult();
             }
@@ -84,23 +78,23 @@ namespace BusinessService.Domain.Services
             }
         }
 
-        
+
         public async Task<IActionResult> GetAllSchoolsAsync()
         {
             try
             {
 
-                   var schools = await _schoolsRepository.GetAllSchoolsAsync();
-                     
-                    if (schools != null)
-                        return new OkObjectResult(schools.Select(p => new SchoolViewModel
-                            {
-                                // Id = p.Id,
+                var schools = await _schoolsRepository.GetAllSchoolsAsync();
 
-                                Name = p.Name.Trim()
-                            }
-                        ));
-                    return new NotFoundResult();
+                if (schools != null)
+                    return new OkObjectResult(schools.Select(p => new SchoolViewModel
+                    {
+                        // Id = p.Id,
+
+                        Name = p.Name.Trim()
+                    }
+                    ));
+                return new NotFoundResult();
             }
             catch
             {
@@ -150,5 +144,5 @@ namespace BusinessService.Domain.Services
     }
 
 
-  
+
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using BusinessService.Api.Logger;
+﻿using BusinessService.Api.Logger;
 using BusinessService.Data.DBModel;
-using BusinessService.Domain.DomainModel;
 using BusinessService.Domain.Services;
-using Microsoft.AspNetCore.Mvc; //using BusinessService..Domain.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc; //using BusinessService..Domain.Services;
 using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace BusinessService.Api.Controllers
 {
@@ -37,7 +34,7 @@ namespace BusinessService.Api.Controllers
             _schoolsService = schoolsService;
             this._logger = logger ?? new LogNLog();
 
-            
+
         }
 
         // GET /api/Schools
@@ -49,10 +46,10 @@ namespace BusinessService.Api.Controllers
         public async Task<IActionResult> GetAllStudentsAsync()
         {
 
-                _logger.Information("Fetching Started: ");
-                var school = await _schoolsService.GetAllSchoolsAsync();
+            _logger.Information("Fetching Started: ");
+            var school = await _schoolsService.GetAllSchoolsAsync();
 
-                return school;
+            return school;
 
         }
 

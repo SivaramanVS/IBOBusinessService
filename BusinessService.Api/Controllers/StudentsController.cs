@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
-using BusinessService.Api.Logger;
+﻿using BusinessService.Api.Logger;
 using BusinessService.Data.DBModel;
 using BusinessService.Domain.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Storage.Blob;
+using System;
+using System.Collections;
+using System.Threading.Tasks;
 
 namespace BusinessService.Api.Controllers
 {
@@ -17,17 +21,20 @@ namespace BusinessService.Api.Controllers
     {
         private readonly IStudentsService _studentsService;
         private readonly ILog _logger;
+        private readonly CloudBlobClient _cloudBlobClient;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="studentsService"></param>
         /// <param name="logger"></param>
-        public StudentsController(IStudentsService studentsService, ILog logger)
+        /// <param name="cloudBlobClient"></param>
+        public StudentsController(IStudentsService studentsService, ILog logger, CloudBlobClient cloudBlobClient)
         {
-            
+
             _studentsService = studentsService;
             _logger = logger;
+            this._cloudBlobClient = cloudBlobClient;
         }
 
         // GET /api/students
@@ -110,5 +117,46 @@ namespace BusinessService.Api.Controllers
             _logger.Information("Updation Started");
             return await _studentsService.UpdateStudentAsync(id, student);
         }
+
+
+        [HttpPost]
+        [Route("UploadImage")]
+        public IActionResult PostFile(IFormFile uploadedFile)
+        {
+
+            string fileName = uploadedFile.FileName;
+            var container = _cloudBlobClient.GetContainerReference("iboimageblob");
+            var blob = container.GetBlockBlobReference(fileName);
+
+            blob.UploadFromStream(uploadedFile.OpenReadStream());
+
+            return Ok("uploaded");
+        }
+
+        [HttpGet()]
+        [Route("GetImage")]
+
+        public OkObjectResult GetAll()
+        {
+
+            var bloblist = new ArrayList();
+
+            var container = _cloudBlobClient.GetContainerReference("iboimageblob");
+            SharedAccessBlobPolicy readOnly = new SharedAccessBlobPolicy()
+            {
+                SharedAccessExpiryTime = DateTime.UtcNow.AddHours(24),
+                Permissions = SharedAccessBlobPermissions.Read
+            };
+
+            var sas = container.GetSharedAccessSignature(readOnly);
+
+            foreach (var blob in container.ListBlobs())
+            {
+                bloblist.Add(blob.Uri + sas);
+            }
+            return Ok(bloblist);
+        }
+
+
     }
 }

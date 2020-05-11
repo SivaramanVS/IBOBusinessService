@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using BusinessService.Api.Logger;
+﻿using BusinessService.Api.Logger;
 using BusinessService.Data.DBModel;
 using BusinessService.Domain.Services;
-using Microsoft.AspNetCore.Mvc; //using BusinessService..Domain.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc; //using BusinessService..Domain.Services;
+using System.Threading.Tasks;
 namespace BusinessService.Api.Controllers
 {
     /// <summary>
@@ -39,14 +38,14 @@ namespace BusinessService.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStudentsAsync()
         {
-            
-            
-                _logger.Information("Fetching Started");
-                var school = await _schoolsService.GetAllSchoolsAsync();
-                
-                return school;
-            
-           
+
+
+            _logger.Information("Fetching Started");
+            var school = await _schoolsService.GetAllSchoolsAsync();
+
+            return school;
+
+
         }
 
 

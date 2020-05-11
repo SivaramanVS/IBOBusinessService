@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
+﻿using BusinessService.Data.DBModel;
 using BusinessService.Data.Repository;
 using BusinessService.Domain.DomainModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessService.Domain.Services
 {
@@ -24,13 +24,13 @@ namespace BusinessService.Domain.Services
 
                 if (students != null)
                     return new OkObjectResult(students.Select(p => new StudentViewModel
-                        {
-                            //Id = p.StudentId,
+                    {
+                        //Id = p.StudentId,
 
-                            Name = p.Name.Trim(),
-                            Gender = p.Gender.Trim(),
-                            SchoolId = p.School
-                        }
+                        Name = p.Name.Trim(),
+                        Gender = p.Gender.Trim(),
+                        SchoolId = p.School
+                    }
                     ));
                 return new NotFoundResult();
             }
@@ -48,12 +48,12 @@ namespace BusinessService.Domain.Services
 
                 if (students != null)
                     return new OkObjectResult(students.Select(p => new StudentViewModel
-                        {
-                            // Id = p.StudentId,
-                            Gender = p.Gender.Trim(),
-                            Name = p.Name.Trim(),
-                            SchoolId = p.School
-                        }
+                    {
+                        // Id = p.StudentId,
+                        Gender = p.Gender.Trim(),
+                        Name = p.Name.Trim(),
+                        SchoolId = p.School
+                    }
                     ));
                 return new NotFoundResult();
             }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
+﻿using BusinessService.Data.DBModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessService.Data.Repository
 {
@@ -42,7 +42,7 @@ namespace BusinessService.Data.Repository
                 await _distributedCache.SetStringAsync("GetSchoolById", jsonData, cacheOptions);
                 return schools;
             }
-               
+
         }
 
         public async Task<School> AddSchoolsAsync(School schools)
@@ -94,7 +94,7 @@ namespace BusinessService.Data.Repository
                 await _distributedCache.SetStringAsync("GetAllSchools", jsonData, cacheOptions);
                 return schools;
             }
-           
+
         }
 
 

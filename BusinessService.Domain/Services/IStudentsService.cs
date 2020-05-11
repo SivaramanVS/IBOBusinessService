@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
+﻿using BusinessService.Data.DBModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BusinessService.Domain.Services
 {

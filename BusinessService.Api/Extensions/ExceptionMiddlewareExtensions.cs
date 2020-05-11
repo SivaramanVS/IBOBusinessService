@@ -1,8 +1,8 @@
-﻿using System.Net;
-using BusinessService.Api.Logger;
+﻿using BusinessService.Api.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace BusinessService.Api.Extensions
 {
@@ -18,7 +18,7 @@ namespace BusinessService.Api.Extensions
         /// </summary>
         /// <param name="app"></param>
         /// <param name="logger"></param>
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app,ILog logger)
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILog logger)
         {
             app.UseExceptionHandler(appError =>
             {
@@ -30,9 +30,9 @@ namespace BusinessService.Api.Extensions
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
-                       
-                        logger.Error("Something went wrong:"+contextFeature.Error);
-                        
+
+                        logger.Error("Something went wrong:" + contextFeature.Error);
+
 
                         await context.Response.WriteAsync(new ErrorDetails()
                         {

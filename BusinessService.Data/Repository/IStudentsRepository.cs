@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BusinessService.Data.DBModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
 
 namespace BusinessService.Data.Repository
 {

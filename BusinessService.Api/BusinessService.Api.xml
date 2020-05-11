@@ -118,12 +118,13 @@
             
             </summary>
         </member>
-        <member name="M:BusinessService.Api.Controllers.StudentsController.#ctor(BusinessService.Domain.Services.IStudentsService,BusinessService.Api.Logger.ILog)">
+        <member name="M:BusinessService.Api.Controllers.StudentsController.#ctor(BusinessService.Domain.Services.IStudentsService,BusinessService.Api.Logger.ILog,Microsoft.Azure.Storage.Blob.CloudBlobClient)">
             <summary>
             
             </summary>
             <param name="studentsService"></param>
             <param name="logger"></param>
+            <param name="cloudBlobClient"></param>
         </member>
         <member name="M:BusinessService.Api.Controllers.StudentsController.GetAllStudentsAsync">
             <summary>
@@ -270,6 +271,11 @@
             </summary>
             <param name="app"></param>
             <param name="logger"></param>
+        </member>
+        <member name="T:BusinessService.Api.FileUploadOperation.FileContentType">
+            <summary>
+            Indicates swashbuckle should consider the parameter as a file upload
+            </summary>
         </member>
         <member name="T:BusinessService.Api.Logger.ILog">
             <summary>

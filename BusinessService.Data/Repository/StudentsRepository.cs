@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using BusinessService.Data.DBModel;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinessService.Data.DBModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace BusinessService.Data.Repository
 {

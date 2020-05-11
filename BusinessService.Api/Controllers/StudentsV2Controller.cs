@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using BusinessService.Api.Logger;
+﻿using BusinessService.Api.Logger;
 using BusinessService.Data.DBModel;
 using BusinessService.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BusinessService.Api.Controllers
 {
@@ -25,7 +25,7 @@ namespace BusinessService.Api.Controllers
         /// <param name="logger"></param>
         public StudentsV2Controller(IStudentsService studentsService, ILog logger)
         {
-            
+
             _studentsService = studentsService;
             _logger = logger;
         }
