@@ -6,7 +6,7 @@ namespace BusinessService.Api
     /// 
     /// </summary>
     public class WeatherForecast
-    {
+    { 
         /// <summary>
         /// 
         /// </summary>
